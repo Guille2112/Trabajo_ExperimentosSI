@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: Guille
+Build-Jdk: 14.0.2
+Implementation-Title: TrabajoFinal_Cinemark
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: pe.edu.upc
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/TrabajoFinal_Cinemark
+Created-By: Maven Integration for Eclipse
+

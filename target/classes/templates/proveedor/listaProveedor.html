@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<meta charset="UTF-8"></meta>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container">
+		<div align="right">
+			<a th:href="@{/proveedores/nuevo}" id="add-row" type="button"
+				class="btn btn-primary">Nuevo Proveedor</a>
+		</div>
+		<div>
+			<form th:action="@{/proveedores/buscarruc}" method="post"
+				th:object="${proveedor}">
+				<div class="form-group">
+
+					<label for="proveedor">Buscar:</label> <input type="text"
+						class="form-control" th:field="*{direccionProveedor}" id="proveedor"
+						placeholder="Ingrese el nombre del proveedor o su ruc"></input>
+					<div align="right">
+						<button type="submit" class="btn btn-success">Aceptar</button>
+						<a href="/proveedores/listar" class="btn btn-danger">Cancelar</a>
+					</div>
+				</div>
+
+			</form>
+
+		</div>
+
+		<div class="card">
+			<div class="card-header text-white bg-dark mb-3">Lista de
+				Proveedores</div>
+			<div class="card-body">
+
+				<div class="table-responsive">
+					<table class="table table-white">
+						<thead class="bg-dark mb-3 text-white">
+							<tr>
+								<th>Id</th>
+								<th>Nombre del proveedor</th>
+								<th>RUC</th>
+								<th align="left">Operaciones</th>
+							</tr>
+						</thead>
+						<tbody id="proveedor-list">
+							<tr th:each="proveedor:${listaProveedores}">
+								<td><a class="btn btn-primary btn-xs"
+									th:href="@{/proveedores/ver/} + ${proveedor.idProveedor}"
+									th:text="${proveedor.idProveedor}"></a></td>
+
+								<td th:text="${proveedor.nombreProveedor}"></td>
+								<td th:text="${proveedor.rucProveedor}"></td>
+								<td align="left"><a th:id="${proveedor.idProveedor}"
+									class="fas fa-trash-alt fa-2x button-default"
+									onclick="ondelete(this);"></a> | <a
+									th:href="@{'/proveedores/detalle/' + ${proveedor.idProveedor}}"
+									class="fas fa-edit fa-2x button-default"></a></td>
+							</tr>
+						</tbody>
+					</table>
+					<div th:if="${mensaje}" class="alert alert-info">
+						<p th:text="${mensaje}"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+<script type="text/javascript">
+	function ondelete(a){
+	Swal.fire({
+				title: '¿Estas seguro?',
+				text: "No podrás revertir esto!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',  
+				cancelButtonColor: '#d33',
+			   	confirmButtonText: 'Si, eliminar!'
+			}).then((result) => {
+		if (result.value) {
+			    location.href = "/proveedores/eliminar?id="+a.id;
+			 }
+		});
+	}
+</script>

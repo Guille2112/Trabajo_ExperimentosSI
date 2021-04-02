@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<meta charset="UTF-8"></meta>
+
+<body>
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container">
+		<div align="right">
+			<a th:href="@{/contadores/nuevo}" id="add-row" type="button"
+				class="btn btn-primary">Nuevo Contador</a>
+		</div>
+		<div>
+			<form th:action="@{/contadores/buscar}" method="post"
+				th:object="${contador}">
+				<div class="form-group">
+
+					<label for="contador">Buscar:</label> <input type="text"
+						class="form-control" th:field="*{name}" id="contador"
+						placeholder="Buscar por nombre del Contador"></input>
+					<div align="right">
+						<button type="submit" class="btn btn-success">Aceptar</button>
+						<a href="/contadores/listar" class="btn btn-danger">Cancelar</a>
+					</div>
+				</div>
+
+			</form>
+
+		</div>
+
+		<div class="card">
+			<div class="card-header text-white bg-dark mb-3">Lista de
+				Contadores</div>
+			<div class="card-body">
+
+				<div class="table-responsive">
+					<table class="table table-white">
+						<thead class="bg-dark mb-3 text-white">
+							<tr>
+								<th>Id</th>
+								<th>Nombre del contador</th>
+								<th>DNI</th>
+								<th align="left">Operaciones</th>
+							</tr>
+						</thead>
+						<tbody id="contador-list">
+							<tr th:each="contador:${listaContadores}">
+								<td><a class="btn btn-primary btn-xs"
+									th:href="@{/contadores/ver/} + ${contador.accountantId}"
+									th:text="${contador.accountantId}"></a></td>
+
+								<td th:text="${contador.name}"></td>
+
+								<td th:text="${contador.documentNumber}"></td>
+
+								<td align="left"><a th:id="${contador.accountantId}"
+									class="fas fa-trash-alt fa-2x button-default"
+									onclick="ondelete(this);"></a> | <a
+									th:href="@{'/contadores/detalle/' + ${contador.accountantId}}"
+									class="fas fa-edit fa-2x button-default"></a></td>
+							</tr>
+						</tbody>
+					</table>
+					<div th:if="${mensaje}" class="alert alert-info">
+						<p th:text="${mensaje}"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+<script type="text/javascript">
+	function ondelete(a){
+		Swal.fire({
+			title: '¿Estas seguro?',
+			text: "No podrás revertir esto!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',  
+			cancelButtonColor: '#d33',
+		   	confirmButtonText: 'Si, eliminar!'
+		}).then((result) => {
+	if (result.value) {
+		    location.href = "/contadores/eliminar?id="+a.id;
+		 }
+	});
+}
+</script>
