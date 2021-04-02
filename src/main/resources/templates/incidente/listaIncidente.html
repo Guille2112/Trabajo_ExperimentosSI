@@ -8,36 +8,37 @@
 
 	<div class="container">
 		<div align="right">
-			<a th:href="@{/facturas/nuevo}" id="add-row" type="button"
-				class="btn btn-primary">Nueva Factura</a>
+			<a th:href="@{/incidentes/nuevo}" id="add-row" type="button"
+				class="btn btn-primary">Nuevo Incidente</a>
 		</div>
-		<div>
-			<form th:action="@{/facturas/buscar}" method="post"
-				th:object="${factura}">
+		<!--  <div>
+			<form th:action="@{/incidentes/buscar}" method="post"
+				th:object="${incidente}">
 				<div class="form-group">
 
-					<label for="factura">Buscar:</label> <input type="text"
-						class="form-control" th:field="*{contadorFactura.name}" id="factura" placeholder="Buscar por nombre del contador"></input>
+					<label for="incidente">Buscar:</label> <input type="text"
+						class="form-control" th:field="*{contadorIncidente.name}" id="incidente" placeholder="Buscar por nombre del contador"></input>
 					<div align="right">
 						<button type="submit" class="btn btn-success">Aceptar</button>
-						<a href="/facturas/listar" class="btn btn-danger">Cancelar</a>
+						<a href="/incidentes/listar" class="btn btn-danger">Cancelar</a>
 					</div>
+					
 				</div>
 
 			</form>
 
-		</div>
+		</div>-->
 
 		<div class="card">
 			<div class="card-header text-white bg-dark mb-3">Lista de
-				Facturas</div>
+				Incidentes</div>
 			<div class="card-body">
 
 				<div class="table-responsive">
 					<table class="table table-white">
 						<thead class="bg-dark mb-3 text-white">
 							<tr>
-								<th>Id Factura</th>
+								<th>Id Incidente</th>
 								<th>Nombre del Contador</th>
 								<th>Id lista de Compra</th>	
 								<th>Precio</th>	
@@ -45,21 +46,21 @@
 								
 							</tr>
 						</thead>
-						<tbody id="factura-list">
-							<tr th:each="factura:${listaFacturas}">
+						<tbody id="incidente-list">
+							<tr th:each="incidente:${listaIncidentes}">
 								<td><a class="btn btn-primary btn-xs"
-									th:href="@{/facturas/ver/} + ${factura.idFactura}"
-									th:text="${factura.idFactura}"></a></td>
+									th:href="@{/incidentes/ver/} + ${incidente.idIncidente}"
+									th:text="${incidente.idIncidente}"></a></td>
 									
-								<td th:text="${factura.contadorFactura.name}"></td>
-								<td th:text="${factura.listaFactura.idLista}"></td>
-								<td th:text="${factura.precio}"></td>
+								<td th:text="${incidente.contadorIncidente.name}"></td>
+								<td th:text="${incidente.listaIncidente.idLista}"></td>
+								<td th:text="${incidente.precio}"></td>
 
-								<td align="left"><a th:id="${factura.idFactura}"
+								<td align="left"><a th:id="${incidente.idIncidente}"
 									class="fas fa-trash-alt fa-2x button-default"
 									onclick="ondelete(this);"></a> | <a
 									
-									th:href="@{'/facturas/detalle/' + ${factura.idFactura}}"
+									th:href="@{'/incidentes/detalle/' + ${incidente.idIncidente}}"
 									class="fas fa-edit fa-2x button-default"></a></td>
 								
 		
@@ -89,11 +90,10 @@
 		   	confirmButtonText: 'Si, eliminar!'
 		}).then((result) => {
 	if (result.value) {
-		    location.href = "/facturas/eliminar?id="+a.id;
+		    location.href = "/incidentes/eliminar?id="+a.id;
 		 }
 	});
 }
-</script>
 
 
 </html>

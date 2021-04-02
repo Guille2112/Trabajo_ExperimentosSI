@@ -113,7 +113,7 @@ public class IncidenteController {
 		} catch (Exception e) {
 			model.addAttribute("error", e.getMessage());
 		}
-		return "/incidente/listaincidente";
+		return "/incidente/listaIncidente";
 	}
 
 	@Secured("ROLE_ADMIN")

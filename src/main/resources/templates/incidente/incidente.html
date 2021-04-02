@@ -9,25 +9,25 @@
 	<div class="container">
 		<div class="card bg-light">
 			<div class="card-header text-black bg-blue">Registro de
-				facturas</div>
-			<form th:action="@{/facturas/guardar}" th:object="${factura}"
+				incidentes</div>
+			<form th:action="@{/incidentes/guardar}" th:object="${incidente}"
 				method="post">
 				<div class="form-group row" style="display: none !important;">
-					<label for="idFactura" class="col-sm-2 col-form-label">Id</label>
+					<label for="idIncidente" class="col-sm-2 col-form-label">Id</label>
 					<div class="col-sm-6">
-						<input type="text" th:field="*{idFactura}" class="form-control" />
+						<input type="text" th:field="*{idIncidente}" class="form-control" />
 					</div>
 				</div>
 
 
 				<div class="form-group row">
-					<label for="contadorFactura" class="col-sm-2 col-form-label">Contador:</label>
+					<label for="contadorIncidente" class="col-sm-2 col-form-label">Contador:</label>
 					<div class="col-sm-6">
 						<select class="form-control"
-							th:field="*{contadorFactura.accountantId}">
+							th:field="*{contadorIncidente.accountantId}">
 							<option th:each="l: ${listaContadores}"
 								th:value="${l.accountantId}" th:text="${l.name}"
-								th:selected="(${l.accountantId} == *{contadorFactura.accountantId})"></option>
+								th:selected="(${l.accountantId} == *{contadorIncidente.accountantId})"></option>
 						</select>
 					</div>
 				</div>
@@ -35,42 +35,42 @@
 
 
 				<div class="form-group row">
-					<label for="listaFactura" class="col-sm-2 col-form-label">Lista
+					<label for="listaIncidente" class="col-sm-2 col-form-label">Lista
 						de compra:</label>
 						
 						
 					<div class="col-sm-6">
-						<select class="form-control" th:field="*{listaFactura.idLista}">
+						<select class="form-control" th:field="*{listaIncidente.idLista}">
 							<option th:each="l: ${listaLista_Compras}"
 								th:value="${l.idLista}" th:text="${l.idLista}"
-								th:selected="(${l.idLista} == *{listaFactura.idLista})"></option>
+								th:selected="(${l.idLista} == *{listaIncidente.idLista})"></option>
 						</select>
 					</div>
 				</div>
 
 
 				<div class="form-group row">
-					<label for="analisisFactura" class="col-sm-2 col-form-label">Análisis</label>
+					<label for="analisisIncidente" class="col-sm-2 col-form-label">Análisis</label>
 					
 					<div class="col-sm-6">
-						<textarea  th:field="*{analisisFactura}"
+						<textarea  th:field="*{analisisIncidente}"
 							class="form-control" th:errorclass="'form-control alert-info'" maxlength="60"></textarea>
-						<small th:if="${#fields.hasErrors('analisisFactura')}"
-							th:errors="*{analisisFactura}"></small>
+						<small th:if="${#fields.hasErrors('analisisIncidente')}"
+							th:errors="*{analisisIncidente}"></small>
 					</div>
 				</div>
 				
 				
 
 				<div class="form-group row">
-					<label for="fechaFactura" class="col-sm-6 col-form-label">Fecha
-						de Facturación: </label>
+					<label for="fechaIncidente" class="col-sm-6 col-form-label">Fecha
+						de Incidenteción: </label>
 					<div class="col-sm-12">
-						<input type="date" th:field="*{fechaFactura}" class="form-control"
+						<input type="date" th:field="*{fechaIncidente}" class="form-control"
 							th:errorclass="'form-control alert-danger'" /> <small
 							class="form-text text-danger"
-							th:if="${#fields.hasErrors('fechaFactura')}"
-							th:errors="*{fechaFactura}"></small>
+							th:if="${#fields.hasErrors('fechaIncidente')}"
+							th:errors="*{fechaIncidente}"></small>
 					</div>
 				</div>
 
@@ -79,7 +79,7 @@
 					<div class="col-sm-6" align="center">
 						<input type="submit" th:value="${valorBoton}" class="btn btn-primary" />
 
-						<a href="/facturas/listar" class="btn btn-danger">Cancelar</a>
+						<a href="/incidentes/listar" class="btn btn-danger">Cancelar</a>
 					</div>
 				</div>
 			</form>
