@@ -22,7 +22,7 @@ import javax.validation.constraints.Past;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name = "factura")
+@Table(name = "incidente")
 public class Incidente implements Serializable {
 
 	/**

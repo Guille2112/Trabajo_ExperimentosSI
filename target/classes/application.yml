@@ -12,24 +12,10 @@ spring:
   jpa:
     database: POSTGRESQL
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
-    show-sql: false
-  mail:
-    host: smtp.gmail.com
-    password: Mcbraver2021$
-    port: 587
-    properties:
-      mail:
-        smtp:
-          auth: true
-          connectiontimeout: 5000
-          starttls:
-            enable: true
-          timeout: 5000
-          writetimeout: 5000
-    username: cinemark.noreply@gmail.com
+    show-sql: false 
