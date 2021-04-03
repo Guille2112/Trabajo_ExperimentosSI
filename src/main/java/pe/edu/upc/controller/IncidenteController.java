@@ -3,7 +3,6 @@ package pe.edu.upc.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -20,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pe.edu.upc.entity.Detalle_List_Compra;
 import pe.edu.upc.entity.Incidente;
-import pe.edu.upc.service.IDetalle_List_CompraService;
 import pe.edu.upc.service.IIncidenteService;
 import pe.edu.upc.service.IListaService;
 
@@ -37,9 +34,6 @@ public class IncidenteController {
 	
 	@Autowired
 	private IListaService icService;
-
-	@Autowired
-	private IDetalle_List_CompraService serviceDetalle;
 
 	@RequestMapping("/bienvenido")
 	public String irBienvenido() {
@@ -65,7 +59,7 @@ public class IncidenteController {
 			return "/incidente/incidente";
 		} else {
 			int rpta = -1;
-			Optional<Incidente> incidenteEncontrado = fService.listarId(incidente.getidIncidente());
+			Optional<Incidente> incidenteEncontrado = fService.listarId(incidente.getIdIncidente());
 			if (!incidenteEncontrado.isPresent()) {
 				rpta = fService.insertar(incidente);
 				redirAttrs.addFlashAttribute("mensaje", "Se registr\u00f3 correctamente");
@@ -81,7 +75,7 @@ public class IncidenteController {
 			}
 
 		}
-		model.addAttribute("listaincidentes", fService.listar());
+		model.addAttribute("listaIncidentes", fService.listar());
 
 		return "redirect:/incidentes/listar";
 
@@ -94,21 +88,7 @@ public class IncidenteController {
 			model.addAttribute("incidente", new Incidente());
 
 			List<Incidente> list = fService.listar();
-			List<Detalle_List_Compra> detalleLista = serviceDetalle.listar();
-
-			for (Incidente l : list) {
-				float precioLista = 0;
-
-				for (Detalle_List_Compra e : detalleLista.stream()
-						.filter(c -> c.getListaDetalle().getIdLista() == l.getlistaCompras().getIdLista())
-						.collect(Collectors.toList()))
-					precioLista += e.getPrecioDetalle() * e.getUnidadesDetalle();
-
-				l.setPrecio(precioLista);
-
-			}
-
-			model.addAttribute("listaincidentes", list);
+			model.addAttribute("listaIncidentes", list);
 
 		} catch (Exception e) {
 			model.addAttribute("error", e.getMessage());
@@ -129,7 +109,7 @@ public class IncidenteController {
 			System.out.println(e.getMessage());
 			model.put("mensaje", "No se puede anular la incidente");
 		}
-		redirAttrs.addFlashAttribute("listaincidentes", fService.listar());
+		redirAttrs.addFlashAttribute("listaIncidentes", fService.listar());
 
 		return "redirect:/incidentes/listar";
 	}
@@ -140,7 +120,7 @@ public class IncidenteController {
 		try {
 			Optional<Incidente> incidente = fService.listarId(id);
 			if (!incidente.isPresent()) {
-				model.addAttribute("info", "incidenter no existe");
+				model.addAttribute("info", "incidente no existe");
 				return "redirect:/incidentes/listar";
 			} else {
 				model.addAttribute("incidente", incidente.get());
@@ -151,7 +131,7 @@ public class IncidenteController {
 		} catch (Exception e) {
 			model.addAttribute("error", e.getMessage());
 		}
-		model.addAttribute("valorBoton", "Modificar");
+		model.addAttribute("valorBoton", "Modificar");	
 		return "/incidente/incidente";
 	}
 

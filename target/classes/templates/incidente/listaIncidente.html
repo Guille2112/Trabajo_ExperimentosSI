@@ -39,9 +39,9 @@
 						<thead class="bg-dark mb-3 text-white">
 							<tr>
 								<th>Id Incidente</th>
-								<th>Nombre del Contador</th>
-								<th>Id lista de Compra</th>	
-								<th>Precio</th>	
+								<th>Lista de Compras</th>
+								<th>Analisis</th>	
+								<th>Fecha de Incidente</th>	
 								<th align="Left">Operaciones</th>
 								
 							</tr>
@@ -51,10 +51,9 @@
 								<td><a class="btn btn-primary btn-xs"
 									th:href="@{/incidentes/ver/} + ${incidente.idIncidente}"
 									th:text="${incidente.idIncidente}"></a></td>
-									
-								<td th:text="${incidente.contadorIncidente.name}"></td>
 								<td th:text="${incidente.listaIncidente.idLista}"></td>
-								<td th:text="${incidente.precio}"></td>
+								<!--<td th:text="${incidente.analisis}"></td>-->
+								<td th:text="${incidente.fechaIncidente}"></td>
 
 								<td align="left"><a th:id="${incidente.idIncidente}"
 									class="fas fa-trash-alt fa-2x button-default"
@@ -95,5 +94,3 @@
 	});
 }
 
-
-</html>

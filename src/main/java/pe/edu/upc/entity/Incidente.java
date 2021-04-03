@@ -13,8 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -35,7 +33,7 @@ public class Incidente implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "idLista")
-	private Lista_Compra listaCompras;
+	private Lista_Compra listaIncidente;
 
 	
 
@@ -50,18 +48,14 @@ public class Incidente implements Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fechaIncidente;
 	
-	@Min(0)
-	@Max(4000)
-	@Column(name = "precio", nullable = false)
-	private float precio;
-	public Incidente(int idIncidente, Lista_Compra listaCompras, String analisis,
-			Date FechaIncidente, float precio) {
+
+	public Incidente(int idIncidente, Lista_Compra listaIncidente, String analisis,
+			Date FechaIncidente) {
 		super();
 		this.idIncidente = idIncidente;
-		this.listaCompras = listaCompras;
+		this.listaIncidente = listaIncidente;
 		this.analisis = analisis;
 		this.fechaIncidente = FechaIncidente;
-		this.precio = precio;
 		
 	}
 
@@ -70,19 +64,20 @@ public class Incidente implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public int getidIncidente() {
+	public int getIdIncidente() {
 		return idIncidente;
 	}
 
-	public void setidIncidente(int idIncidente) {
+	public void setIdIncidente(int idIncidente) {
 		this.idIncidente = idIncidente;
 	}
 
-	public Lista_Compra getlistaCompras() {
-		return listaCompras;
+	public Lista_Compra getListaIncidente() {
+		return listaIncidente;
 	}
 
-	public void setlistaCompras(Lista_Compra listaCompras) {
+	public void setListaIncidente(Lista_Compra listaIncidente) {
+		this.listaIncidente = listaIncidente;
 	}
 
 
@@ -102,12 +97,6 @@ public class Incidente implements Serializable {
 	public void setFechaIncidente(Date FechaIncidente) {
 		this.fechaIncidente = FechaIncidente;
 	}
-	public float getPrecio() {
-		return precio;
-	}
 
-	public void setPrecio(float precio) {
-		this.precio = precio;
-	}
 
 }

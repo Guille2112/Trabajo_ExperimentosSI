@@ -8,7 +8,7 @@
 	<div class="container">
 		<div class="card">
 			<div class="card-header text-white bg-dark mb-3">Detalles de
-				Factura</div>
+				Incidente</div>
 			<div class="card-body">
 
 				<div class="table-responsive">
@@ -17,38 +17,29 @@
 						<tbody>
 							<tr>
 								<td>CÓDIGO</td>
-								<td th:text="${factura.idFactura}"></td>
-							</tr>
-							<tr>
-								<td>CONTADOR</td>
-								<td th:text="${factura.contadorFactura.name}"></td>
+								<td th:text="${incidente.idIncidente}"></td>
 							</tr>
 							<tr>
 								<td>ID LISTA DE COMPRA</td>
-								<td th:text="${factura.listaFactura.idLista}"></td>
-							</tr>
-							<tr>
-								<td>PRECIO</td>
-								<td th:text="${factura.precio}"></td>
-							</tr>
-								
+								<td th:text="${incidente.listaIncidente.idLista}"></td>
+							</tr>	
 							<tr>
 								<td>ANÁLISIS</td>
-								<td th:text="${factura.analisisFactura}"></td>
+								<td th:text="${incidente.analisis}"></td>
 							</tr>
 							<tr>
 								<td>FECHA DE EMISIÓN</td>
-								<td th:text="${factura.fechaFactura}"></td>
+								<td th:text="${incidente.fechaIncidente}"></td>
 							</tr>
 							
 
 						</tbody>
 					</table>
 
-					<a th:href="@{/facturas/listar}" type="button"
+					<a th:href="@{/incidentes/listar}" type="button"
 						class="btn btn-primary k"> <span
 						class="glyphicon glyphicon-circle-arrow-left"></span> Regresar a
-						la lista de Facturas
+						la lista de Incidentes
 					</a>
 				</div>
 			</div>
