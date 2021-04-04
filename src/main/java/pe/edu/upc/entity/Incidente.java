@@ -38,8 +38,8 @@ public class Incidente implements Serializable {
 	
 
 	@NotEmpty(message = "Ingresa el an\u00e1lisis de la factura")
-	@Column(name = "analisis", nullable = false, length = 60)
-	private String analisis;
+	@Column(name = "analisisIncidente", nullable = false, length = 60)
+	private String analisisIncidente;
 
 	@NotNull(message = "La fecha es obligatoria")
 	@Past(message = "La fecha debe estar en el pasado")
@@ -49,12 +49,12 @@ public class Incidente implements Serializable {
 	private Date fechaIncidente;
 	
 
-	public Incidente(int idIncidente, Lista_Compra listaIncidente, String analisis,
+	public Incidente(int idIncidente, Lista_Compra listaIncidente, String analisisIncidente,
 			Date FechaIncidente) {
 		super();
 		this.idIncidente = idIncidente;
 		this.listaIncidente = listaIncidente;
-		this.analisis = analisis;
+		this.analisisIncidente = analisisIncidente;
 		this.fechaIncidente = FechaIncidente;
 		
 	}
@@ -82,12 +82,12 @@ public class Incidente implements Serializable {
 
 
 	
-	public String getanalisis() {
-		return analisis;
+	public String getAnalisisIncidente() {
+		return analisisIncidente;
 	}
 
-	public void setanalisis(String analisis) {
-		this.analisis = analisis;
+	public void setAnalisisIncidente(String analisisIncidente) {
+		this.analisisIncidente = analisisIncidente;
 	}
 
 	public Date getFechaIncidente() {

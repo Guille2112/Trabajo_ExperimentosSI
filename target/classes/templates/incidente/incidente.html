@@ -36,13 +36,13 @@
 
 
 				<div class="form-group row">
-					<label for="analisis" class="col-sm-2 col-form-label">Análisis</label>
+					<label for="analisisIncidente" class="col-sm-2 col-form-label">Análisis Incidente</label>
 					
 					<div class="col-sm-6">
-						<textarea  th:field="*{analisis}"
+						<textarea  th:field="*{analisisIncidente}"
 							class="form-control" th:errorclass="'form-control alert-info'" maxlength="60"></textarea>
-						<small th:if="${#fields.hasErrors('analisis')}"
-							th:errors="*{analisis}"></small>
+						<small th:if="${#fields.hasErrors('analisisIncidente')}"
+							th:errors="*{analisisIncidente}"></small>
 					</div>
 				</div>
 				
