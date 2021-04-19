@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pe.edu.upc.service.ISecurityService;
 
 @SpringBootApplication
-public class FinalWorkCinemarkApplication implements CommandLineRunner {
+public class FinalWorkCAIApplication implements CommandLineRunner {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
@@ -23,14 +23,14 @@ public class FinalWorkCinemarkApplication implements CommandLineRunner {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(FinalWorkCinemarkApplication.class, args);
+		SpringApplication.run(FinalWorkCAIApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
 
-		String password = "cinemark2019";
-		secService.createUser("admin", password, "meli33638@gmail.com", "ADMIN", "ADMIN", "ROLE_ADMIN");
+		String password = "cai2021";
+		secService.createUser("admin", password, "diegopaz25814@gmail.com", "ADMIN", "ADMIN", "ROLE_ADMIN");
 
 		String bcryptPassword = passwordEncoder.encode(password);
 		System.out.println(bcryptPassword);
