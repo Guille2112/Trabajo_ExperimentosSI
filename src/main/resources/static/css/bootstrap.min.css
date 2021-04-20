@@ -6070,7 +6070,7 @@ a.bg-light:focus, a.bg-light:hover, button.bg-light:focus, button.bg-light:hover
 }
 
 .bg-dark {
-	background-color: #b5121c !important
+	background-color: rgb(0, 128, 128) !important
 }
 
 a.bg-dark:focus, a.bg-dark:hover, button.bg-dark:focus, button.bg-dark:hover
