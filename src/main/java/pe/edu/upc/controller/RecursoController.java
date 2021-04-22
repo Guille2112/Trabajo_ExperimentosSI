@@ -46,7 +46,7 @@ public class RecursoController {
 		return "bienvenido";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
+	@Secured({ "ROLE_ADMIN"})
 	@GetMapping("/nuevo")
 	public String nuevoRecurso(Model model) {
 		model.addAttribute("recurso", new Recurso());
@@ -69,7 +69,7 @@ public class RecursoController {
 				.body(recurso);
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
+	@Secured({ "ROLE_ADMIN" })
 	@PostMapping("/guardar")
 	public String guardarRecurso(@Valid Recurso recurso, BindingResult result, Model model,
 			@RequestParam("file") MultipartFile foto, RedirectAttributes flash, SessionStatus status) throws Exception {
@@ -129,7 +129,7 @@ public class RecursoController {
 		return "/recurso/listaRecurso";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@Secured({"ROLE_ADMIN"})
 	@RequestMapping("/eliminar")
 	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id,
 			RedirectAttributes redirAttrs) {

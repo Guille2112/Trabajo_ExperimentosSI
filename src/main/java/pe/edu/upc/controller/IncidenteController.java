@@ -40,7 +40,7 @@ public class IncidenteController {
 		return "bienvenido";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping("/nuevo")
 	public String nuevoincidente(Model model) {
 		model.addAttribute("incidente", new Incidente());
@@ -49,7 +49,7 @@ public class IncidenteController {
 		return "/incidente/incidente";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@PostMapping("/guardar")
 	public String guardarincidente(@Valid Incidente incidente, BindingResult result, Model model, SessionStatus status,
 			RedirectAttributes redirAttrs) throws Exception {
@@ -96,7 +96,7 @@ public class IncidenteController {
 		return "/incidente/listaIncidente";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN"})
 	@RequestMapping("/eliminar")
 	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id,
 			RedirectAttributes redirAttrs) {
@@ -114,7 +114,7 @@ public class IncidenteController {
 		return "redirect:/incidentes/listar";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN"})
 	@GetMapping("/detalle/{id}") // modificar
 	public String detailsincidente(@PathVariable(value = "id") int id, Model model) {
 		try {
