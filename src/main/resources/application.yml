@@ -3,8 +3,8 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: postgres
-    url: jdbc:postgresql://localhost/cai
+    password: tigrillogato
+    url: jdbc:postgresql://localhost/saledb
     username: postgres
   jackson:
     serialization:

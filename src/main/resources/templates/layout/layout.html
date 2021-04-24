@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="head">
 <meta charset="UTF-8"></meta>
@@ -38,7 +38,7 @@
 				<div
 					class="row no-gutters d-flex align-items-center align-items-stretch">
 					<div class="col-md-4 d-flex align-items-center py-4">
-						<a class="navbar-brand" href="bienvenido.html"><img
+						<a class="navbar-brand" th:href="@{bienvenido}"><img
 							src="https://censaindustrial.com/wp-content/uploads/2019/10/IM.png"
 							width=50px height=50px><span class="fuente-header">
 								C.A.I. </span><br> <span class="fuente-second-header">Control
@@ -88,17 +88,14 @@
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item"><a class="nav-link" href="#about"
 							th:href="@{bienvenido}">Bienvenido</a></li>
-						<li class="nav-item"><a class="nav-link" href="#about"
-							th:href="@{/empleados/listar}">Empleados</a></li>
-						<li class="nav-item"><a class="nav-link" href="#about"
-							th:href="@{/recursos/listar}">Recursos</a></li>
-						<li class="nav-item"><a class="nav-link" href="#about"
-							th:href="@{/incidentes/listar}">Incidentes</a></li>
-						<li class="nav-item"><a class="nav-link" href="#about"
-							th:href="@{/proveedores/listar}">Proveedores</a></li>
-						<li class="nav-item"><a class="nav-link" href="#about"
-							th:href="@{/listaCompras/listar}">Lista de compra</a></li>
-					</ul>
+						
+							<li class="nav-item"sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/empleados/listar}" class="nav-link" href="#about">Empleados</a></li>
+							<li class="nav-item"sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/recursos/listar}" class="nav-link" href="#about">Recursos</a></li>
+							<li class="nav-item"sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER')"><a th:href="@{/incidentes/listar}" class="nav-link" href="#about">Incidentes</a></li>
+							<li class="nav-item"sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/proveedores/listar}" class="nav-link" href="#about">Proveedores</a></li>
+							<li class="nav-item"sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER')"><a th:href="@{/listaCompras/listar}" class="nav-link" href="#about">Lista de Compras</a></li>
+						
+					</ul>	
 				</div>
 			</div>
 		</nav>
