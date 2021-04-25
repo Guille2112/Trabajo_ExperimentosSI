@@ -9,6 +9,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +30,7 @@ import pe.edu.upc.service.IListaService;
 import pe.edu.upc.service.IRecursoService;
 
 @Controller
-@SessionAttributes("detalle")
+@SessionAttributes("{detalle, usuario_rol, usuario_nombre}")
 @RequestMapping("/detalles")
 public class Detalle_List_CompraController {
 
@@ -47,20 +49,41 @@ public class Detalle_List_CompraController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/nuevo")
 	public String nuevoDetalle(Model model) {
-		model.addAttribute("detalle", new Detalle_List_Compra());
-		model.addAttribute("listaCompras", lService.listar());
-		model.addAttribute("listaRecursos", rService.listar());
-		model.addAttribute("valorBoton", "Registrar");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			model.addAttribute("detalle", new Detalle_List_Compra());
+			model.addAttribute("listaCompras", lService.listar());
+			model.addAttribute("listaRecursos", rService.listar());
+			model.addAttribute("valorBoton", "Registrar");
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
 		return "detalle/detalle";
 	}
 
 	@Secured("ROLE_ADMIN")
 	@GetMapping(value = "/nuevodentro/{id}")
 	public String nuevoDetalleespecifico(@PathVariable(value = "id") Integer id, Model model) {
-		model.addAttribute("detalle", new Detalle_List_Compra());
-		model.addAttribute("listaCompras", lService.buscarespefico(id));
-		model.addAttribute("listaRecursos", rService.listar());
-		model.addAttribute("valorBoton", "Registrar");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		try {
+			model.addAttribute("detalle", new Detalle_List_Compra());
+			model.addAttribute("listaCompras", lService.buscarespefico(id));
+			model.addAttribute("listaRecursos", rService.listar());
+			model.addAttribute("valorBoton", "Registrar");
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
+		
 		return "detalle/detalle";
 	}
 
@@ -68,7 +91,11 @@ public class Detalle_List_CompraController {
 	@PostMapping("/guardar")
 	public String guardarDetalle(@Valid @ModelAttribute(value = "detalle") Detalle_List_Compra detalle_List_Compra,
 			BindingResult result, Model model, SessionStatus status, RedirectAttributes redirAttrs) throws Exception {
-
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 		if (result.hasErrors()) {
 			model.addAttribute("listaCompras", lService.listar());
 			model.addAttribute("listaRecursos", rService.listar());
@@ -103,9 +130,14 @@ public class Detalle_List_CompraController {
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping("/listar")
 	public String listarDetalles(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
 			model.addAttribute("detalle", new Detalle_List_Compra());
 			model.addAttribute("listaDetalles", dService.listar());
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+			
 		} catch (Exception e) {
 			model.addAttribute("error", e.getMessage());
 		}
@@ -114,9 +146,13 @@ public class Detalle_List_CompraController {
 
 	@Secured("ROLE_ADMIN")
 	@RequestMapping("/eliminar")
-	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id) {
+	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id,Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		try {
+			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+			
 			if (id != null && id > 0) {
 				dService.eliminar(id);
 				model.put("mensaje", "Se ha eliminado el detalle de compra correctamente.");
@@ -133,7 +169,11 @@ public class Detalle_List_CompraController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/detalle/{id}")
 	public String detailsDetalle(@PathVariable(value = "id") int id, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+			
 			Optional<Detalle_List_Compra> detalle = dService.listarId(id);
 			if (!detalle.isPresent()) {
 				model.addAttribute("info", "Detalle no existe");
@@ -154,32 +194,50 @@ public class Detalle_List_CompraController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@RequestMapping("/buscar")
-	public String buscar(Map<String, Object> model, @ModelAttribute Detalle_List_Compra detalle) throws ParseException {
+	public String buscar(Map<String, Object> model, @ModelAttribute Detalle_List_Compra detalle, Model modelo) throws ParseException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+			
+			List<Detalle_List_Compra> listaDetalles;
 
-		List<Detalle_List_Compra> listaDetalles;
+			detalle.setRecursoDetalle(detalle.getRecursoDetalle());
+			listaDetalles = dService.FindRecursosByListaCompra(detalle.getListaDetalle().getIdLista());
 
-		detalle.setRecursoDetalle(detalle.getRecursoDetalle());
-		listaDetalles = dService.FindRecursosByListaCompra(detalle.getListaDetalle().getIdLista());
-
-		if (listaDetalles.isEmpty()) {
-			model.put("mensaje", "No se encontraron recursos con la cantidad de unidades especificado.");
-
+			if (listaDetalles.isEmpty()) {
+				model.put("mensaje", "No se encontraron recursos con la cantidad de unidades especificado.");
+	
+			}
+			model.put("listaDetalles", listaDetalles);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
-		model.put("listaDetalles", listaDetalles);
+		
 		return "detalle/listaDetalle";
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping(value = "/ver/{id}")
-	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash) {
-
+	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash ,Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Optional<Detalle_List_Compra> detalle = dService.listarId(id);
-		if (detalle == null) {
-			flash.addFlashAttribute("error", "El detalle de lista de compra no existe en la base de datos.");
-			return "redirect:/detalles/listar";
+		try {
+			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+			
+			if (detalle == null) {
+				flash.addFlashAttribute("error", "El detalle de lista de compra no existe en la base de datos.");
+				return "redirect:/detalles/listar";
+			}
+			model.put("detalle", detalle.get());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
-		model.put("detalle", detalle.get());
-
+		
 		return "detalle/verd";
 	}
 

@@ -9,6 +9,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,7 +28,7 @@ import pe.edu.upc.entity.Proveedor;
 import pe.edu.upc.service.IProveedorService;
 
 @Controller
-@SessionAttributes("proveedor")
+@SessionAttributes("{proveedor, usuario_rol, usuario_nombre}")
 @RequestMapping("/proveedores")
 public class ProveedorController {
 
@@ -41,8 +43,18 @@ public class ProveedorController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/nuevo")
 	public String nuevoProveedor(Model model) {
-		model.addAttribute("proveedor", new Proveedor());
-		model.addAttribute("valorBoton", "Registrar");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			model.addAttribute("proveedor", new Proveedor());
+			model.addAttribute("valorBoton", "Registrar");
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
 		return "proveedor/proveedor";
 	}
 
@@ -50,6 +62,10 @@ public class ProveedorController {
 	@PostMapping("/guardar")
 	public String guardarProveedor(@Valid Proveedor proveedor, BindingResult result, Model model, SessionStatus status,
 			RedirectAttributes redirAttrs) throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		if (result.hasErrors()) {
 			model.addAttribute("valorBoton", "Registrar");
 			return "/proveedor/proveedor";
@@ -85,6 +101,11 @@ public class ProveedorController {
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping("/listar")
 	public String listarProveedores(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		try {
 			model.addAttribute("proveedor", new Proveedor());
 			model.addAttribute("listaProveedores", pService.listar());
@@ -97,8 +118,14 @@ public class ProveedorController {
 	@Secured("ROLE_ADMIN")
 	@RequestMapping("/eliminar")
 	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id,
-			RedirectAttributes redirAttrs) {
+			RedirectAttributes redirAttrs, Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		
 		try {
+			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			if (id != null && id > 0) {
 				pService.eliminar(id);
 				redirAttrs.addFlashAttribute("mensaje", "se cancel\u00f3 el contrato con el proveedor seleccionado");
@@ -115,7 +142,12 @@ public class ProveedorController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/detalle/{id}")
 	public String detailsProveedor(@PathVariable(value = "id") int id, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			Optional<Proveedor> proveedor = pService.listarId(id);
 			if (!proveedor.isPresent()) {
 				model.addAttribute("info", "proveedor no existe");
@@ -132,8 +164,12 @@ public class ProveedorController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@RequestMapping("/buscar")
-	public String buscar(Map<String, Object> model, @ModelAttribute Proveedor proveedor) throws ParseException {
-
+	public String buscar(Map<String, Object> model, @ModelAttribute Proveedor proveedor, Model modelo) throws ParseException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		List<Proveedor> listaProveedores;
 		proveedor.setNombreProveedor(proveedor.getNombreProveedor());
 		listaProveedores = pService.buscarNombre(proveedor.getNombreProveedor());
@@ -146,8 +182,12 @@ public class ProveedorController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@RequestMapping("/buscarruc")
-	public String buscarRuc(Map<String, Object> model, @ModelAttribute Proveedor proveedor) throws ParseException {
-
+	public String buscarRuc(Map<String, Object> model, @ModelAttribute Proveedor proveedor, Model modelo) throws ParseException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		List<Proveedor> listaprovedor;
 		proveedor.setDireccionProveedor(proveedor.getDireccionProveedor());
 		listaprovedor = pService.buscarDireccion(proveedor.getDireccionProveedor());
@@ -168,8 +208,12 @@ public class ProveedorController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping(value = "/ver/{id}")
-	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash) {
-
+	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash, Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		Optional<Proveedor> proveedor = pService.listarId(id);
 		if (proveedor == null) {
 			flash.addFlashAttribute("error", "El proveedor no existe en la base de datos");

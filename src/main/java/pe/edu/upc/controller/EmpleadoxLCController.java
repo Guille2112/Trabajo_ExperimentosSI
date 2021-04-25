@@ -9,6 +9,8 @@ import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +30,7 @@ import pe.edu.upc.service.IEmpleadoxLCService;
 import pe.edu.upc.service.IListaService;
 
 @Controller
-@SessionAttributes("empleadoxLC")
+@SessionAttributes("{empleadoxLC, usuario_rol, usuario_nombre}")
 @RequestMapping("/empleadoxLCs")
 public class EmpleadoxLCController {
 
@@ -49,10 +51,20 @@ public class EmpleadoxLCController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/nuevo")
 	public String nuevoEmpleadoxLC(Model model) {
-		model.addAttribute("empleadoxLC", new EmpleadoxLC());
-		model.addAttribute("listaEmpleados", eService.listar());
-		model.addAttribute("listaLista_Compras", lService.listar());
-		model.addAttribute("valorBoton", "Registrar");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			model.addAttribute("empleadoxLC", new EmpleadoxLC());
+			model.addAttribute("listaEmpleados", eService.listar());
+			model.addAttribute("listaLista_Compras", lService.listar());
+			model.addAttribute("valorBoton", "Registrar");
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
 		return "empleadoxLC/empleadoxLC";
 	}
 
@@ -60,6 +72,10 @@ public class EmpleadoxLCController {
 	@PostMapping("/guardar")
 	public String guardarEmpleadoxLC(@Valid EmpleadoxLC empleadoxLC, BindingResult result, Model model,
 			SessionStatus status, RedirectAttributes redirAttrs) throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		if (result.hasErrors()) {
 			model.addAttribute("valorBoton", "Registrar");
 			return "/empleadoxLC/empleadoxLC";
@@ -94,6 +110,11 @@ public class EmpleadoxLCController {
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping("/listar")
 	public String listarEmpleadoxLC(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		try {
 			model.addAttribute("empleadoxLC", new EmpleadoxLC());
 			model.addAttribute("listaEmpleadoxLCs", elService.listar());
@@ -106,7 +127,12 @@ public class EmpleadoxLCController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/detalle/{id}") // modificar
 	public String detailsEmpleadoxLC(@PathVariable(value = "id") int id, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			Optional<EmpleadoxLC> empleadoxLC = elService.listarId(id);
 			if (!empleadoxLC.isPresent()) {
 				model.addAttribute("info", "facturar no existe");
@@ -115,6 +141,7 @@ public class EmpleadoxLCController {
 				model.addAttribute("empleadoxLC", empleadoxLC.get());
 				model.addAttribute("listaEmpleados", eService.listar());
 				model.addAttribute("listaLista_Compras", lService.listar());
+				
 			}
 
 		} catch (Exception e) {
@@ -126,8 +153,13 @@ public class EmpleadoxLCController {
 
 	@Secured("ROLE_ADMIN")
 	@RequestMapping("/eliminar")
-	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id) {
+	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id,Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			if (id != null && id > 0) {
 				elService.eliminar(id);
 				model.put("mensaje", "Se cancel\u00f3 la relaci\u00f3n empleado por orden de compra");
@@ -143,8 +175,11 @@ public class EmpleadoxLCController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@RequestMapping("/buscar")
-	public String buscar(Map<String, Object> model, @ModelAttribute EmpleadoxLC empleadoxLC) throws ParseException {
-
+	public String buscar(Map<String, Object> model, @ModelAttribute EmpleadoxLC empleadoxLC,Model modelo) throws ParseException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		List<EmpleadoxLC> listaEmpleadoxLCs;
 		listaEmpleadoxLCs = elService.buscarNombreEmpleado(empleadoxLC.getEmpleadoEmpleadoLC().getNombreEmpleado());
 		if (listaEmpleadoxLCs.isEmpty()) {

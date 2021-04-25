@@ -26,7 +26,7 @@ import pe.edu.upc.service.IIncidenteService;
 import pe.edu.upc.service.IListaService;
 
 @Controller
-@SessionAttributes("incidente")
+@SessionAttributes("{incidente, usuario_rol, usuario_nombre}")
 @RequestMapping("/incidentes")
 public class IncidenteController {
 
@@ -45,9 +45,19 @@ public class IncidenteController {
 	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping("/nuevo")
 	public String nuevoincidente(Model model) {
-		model.addAttribute("incidente", new Incidente());
-		model.addAttribute("listaLista_Compras", icService.listar());
-		model.addAttribute("valorBoton", "Registrar");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			model.addAttribute("incidente", new Incidente());
+			model.addAttribute("listaLista_Compras", icService.listar());
+			model.addAttribute("valorBoton", "Registrar");
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
 		return "/incidente/incidente";
 	}
 
@@ -55,6 +65,11 @@ public class IncidenteController {
 	@PostMapping("/guardar")
 	public String guardarincidente(@Valid Incidente incidente, BindingResult result, Model model, SessionStatus status,
 			RedirectAttributes redirAttrs) throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		if (result.hasErrors()) {
 			model.addAttribute("listaLista_Compras", icService.listar());
 			model.addAttribute("valorBoton", "Registrar");
@@ -86,8 +101,12 @@ public class IncidenteController {
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping("/listar")
 	public String listarincidentes(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			model.addAttribute("incidente", new Incidente());
 
 			List<Incidente> list = fService.listar();
@@ -103,8 +122,13 @@ public class IncidenteController {
 	@Secured({"ROLE_ADMIN"})
 	@RequestMapping("/eliminar")
 	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id,
-			RedirectAttributes redirAttrs) {
+			RedirectAttributes redirAttrs, Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			if (id != null && id > 0) {
 				fService.eliminar(id);
 				redirAttrs.addFlashAttribute("mensaje", "Se cancel\u00f3 la incidente");
@@ -121,7 +145,11 @@ public class IncidenteController {
 	@Secured({"ROLE_ADMIN"})
 	@GetMapping("/detalle/{id}") // modificar
 	public String detailsincidente(@PathVariable(value = "id") int id, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
 			Optional<Incidente> incidente = fService.listarId(id);
 			if (!incidente.isPresent()) {
 				model.addAttribute("info", "incidente no existe");
@@ -141,8 +169,12 @@ public class IncidenteController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping(value = "/ver/{id}")
-	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash) {
-
+	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash, Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		Optional<Incidente> incidente = fService.listarId(id);
 		if (incidente == null) {
 			flash.addFlashAttribute("error", "La incidente no existe en la base de datos");

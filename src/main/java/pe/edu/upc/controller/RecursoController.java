@@ -34,7 +34,7 @@ import pe.edu.upc.service.IRecursoService;
 import pe.edu.upc.service.IUploadFileService;
 
 @Controller
-@SessionAttributes("recurso")
+@SessionAttributes("{recurso, usuario_rol, usuario_nombre}")
 @RequestMapping("/recursos")
 public class RecursoController {
 	@Autowired
@@ -54,6 +54,7 @@ public class RecursoController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		try {
 			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -65,17 +66,31 @@ public class RecursoController {
 	@Secured({ "ROLE_ADMIN"})
 	@GetMapping("/nuevo")
 	public String nuevoRecurso(Model model) {
-		model.addAttribute("recurso", new Recurso());
-		model.addAttribute("valorBoton", "Registrar");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			model.addAttribute("recurso", new Recurso());
+			model.addAttribute("valorBoton", "Registrar");
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
 		return "recurso/recurso";
 	}
 
 	@GetMapping(value = "/uploads/{filename:.+}")
-	public ResponseEntity<Resource> verFoto(@PathVariable String filename) {
+	public ResponseEntity<Resource> verFoto(@PathVariable String filename,Model model) {
 
 		Resource recurso = null;
-
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			recurso = uploadFileService.load(filename);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -89,6 +104,10 @@ public class RecursoController {
 	@PostMapping("/guardar")
 	public String guardarRecurso(@Valid Recurso recurso, BindingResult result, Model model,
 			@RequestParam("file") MultipartFile foto, RedirectAttributes flash, SessionStatus status) throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		if (result.hasErrors()) {
 			model.addAttribute("valorBoton", "Registrar");
 			return "/recurso/recurso";
@@ -135,7 +154,12 @@ public class RecursoController {
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping("/listar")
 	public String listarRecursos(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			model.addAttribute("recurso", new Recurso());
 
 			model.addAttribute("listaRecursos", rService.listar());
@@ -148,8 +172,13 @@ public class RecursoController {
 	@Secured({"ROLE_ADMIN"})
 	@RequestMapping("/eliminar")
 	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id,
-			RedirectAttributes redirAttrs) {
+			RedirectAttributes redirAttrs, Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			if (id != null && id > 0) {
 				rService.eliminar(id);
 				redirAttrs.addFlashAttribute("mensaje", "Se elimin\u00f3 el recurso");
@@ -166,7 +195,12 @@ public class RecursoController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/detalle/{id}") // modificar
 	public String detailsRecursos(@PathVariable(value = "id") int id, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			Recurso recurso = rService.listarId(id);
 			if (recurso == null) {
 				model.addAttribute("info", "Recurso no existe");
@@ -184,7 +218,12 @@ public class RecursoController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@RequestMapping("/buscar")
-	public String buscar(Map<String, Object> model, @ModelAttribute Recurso recurso) throws ParseException {
+	public String buscar(Map<String, Object> model, @ModelAttribute Recurso recurso, Model modelo) throws ParseException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 
 		List<Recurso> listaRecursos;
 
@@ -204,8 +243,12 @@ public class RecursoController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping(value = "/ver/{id}")
-	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash) {
-
+	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash, Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		Recurso recurso = rService.listarId(id);
 		if (recurso == null) {
 			flash.addFlashAttribute("error", "El recurso no existe en la base de datos");

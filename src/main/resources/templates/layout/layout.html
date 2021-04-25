@@ -68,8 +68,17 @@
 												type="submit">Salir</button>
 										</form></li>
 								</ul>
+								
+								<ul sec:authorize="isAuthenticated()" class="navbar-nav" style="margin-right: 50px;">
+			   
+		        <a>
+		          <i class="fas fa-user-circle"></i> User: <span th:text="${usuario_nombre}"></span>
+		        </a>
+		      
+		   </ul>
 
 							</div>
+							
 						</div>
 					</div>
 				</div>

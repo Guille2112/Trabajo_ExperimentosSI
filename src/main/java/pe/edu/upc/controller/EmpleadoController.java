@@ -10,6 +10,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +29,7 @@ import pe.edu.upc.entity.Empleado;
 import pe.edu.upc.serviceimpl.EmpleadoServiceImpl;
 
 @Controller
-@SessionAttributes("empleado")
+@SessionAttributes("{empleado, usuario_rol, usuario_nombre}")
 @RequestMapping("/empleados")
 public class EmpleadoController {
 
@@ -39,12 +41,26 @@ public class EmpleadoController {
 	public String irBienvenido() {
 		return "bienvenido";
 	}
+	
+	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/nuevo")
 	public String nuevoEmpleado(Model model) {
-		model.addAttribute("empleado", new Empleado());
-		model.addAttribute("valorBoton", "Registrar");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		try {
+			model.addAttribute("empleado", new Empleado());
+			model.addAttribute("valorBoton", "Registrar");
+			
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
 		return "empleado/empleado";
 	}
 
@@ -52,6 +68,10 @@ public class EmpleadoController {
 	@PostMapping("/guardar")
 	public String guardarEmpleado(@Valid Empleado empleado, BindingResult result, Model model, SessionStatus status,
 			RedirectAttributes redirAttrs) throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
 		if (result.hasErrors()) {
 			model.addAttribute("valorBoton", "Registrar");
 			return "/empleado/empleado";
@@ -86,9 +106,15 @@ public class EmpleadoController {
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping("/listar")
 	public String listarEmpleados(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		try {
+			
 			model.addAttribute("empleado", new Empleado());
 			model.addAttribute("listaEmpleados", eService.listar());
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+			
+			
 		} catch (Exception e) {
 			model.addAttribute("error", e.getMessage());
 		}
@@ -98,8 +124,11 @@ public class EmpleadoController {
 	@Secured("ROLE_ADMIN")
 	@RequestMapping("/eliminar")
 	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id,
-			RedirectAttributes redirAttrs) {
+			RedirectAttributes redirAttrs ,Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		try {
+			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
 			if (id != null && id > 0) {
 				eService.eliminar(id);
 				redirAttrs.addFlashAttribute("mensaje", "Se ha eliminado correctamente.");
@@ -116,7 +145,10 @@ public class EmpleadoController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/detalle/{id}") // modificar
 	public String DetallesEmpleado(@PathVariable(value = "id") int id, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
 			Optional<Empleado> empleado = eService.listarId(id);
 			if (!empleado.isPresent()) {
 				model.addAttribute("info", "Empleado no existe.");
@@ -134,29 +166,54 @@ public class EmpleadoController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@RequestMapping("/buscar")
-	public String BuscarPorPuesto(Map<String, Object> model, @ModelAttribute Empleado empleado) throws ParseException {
+	public String BuscarPorPuesto(Map<String, Object> model, @ModelAttribute Empleado empleado,Model modelo) throws ParseException {
 
 		List<Empleado> listaEmpleados;
-
-		empleado.setPuestoEmpleado(empleado.getPuestoEmpleado());
-		listaEmpleados = eService.BuscarPorPuesto(empleado.getPuestoEmpleado());
-		if (listaEmpleados.isEmpty()) {
-			model.put("mensaje", "No se encontr\u00f3 al empleado con el puesto laboral especificado");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			empleado.setPuestoEmpleado(empleado.getPuestoEmpleado());
+			listaEmpleados = eService.BuscarPorPuesto(empleado.getPuestoEmpleado());
+			if (listaEmpleados.isEmpty()) {
+				model.put("mensaje", "No se encontr\u00f3 al empleado con el puesto laboral especificado");
+			}
+			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+			model.put("listaEmpleados", listaEmpleados);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
-		model.put("listaEmpleados", listaEmpleados);
+
+		
+		
+		
 		return "empleado/listaEmpleado";
 	}
+	
 
 	@Secured("ROLE_ADMIN")
 	@GetMapping(value = "/ver/{id}")
-	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash) {
+	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash ,Model modelo) {
 
 		Optional<Empleado> empleado = eService.listarId(id);
-		if (empleado == null) {
-			flash.addFlashAttribute("error", "El empleado no existe en la base de datos.");
-			return "redirect:/empleados/listar";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			if (empleado == null) {
+				flash.addFlashAttribute("error", "El empleado no existe en la base de datos.");
+				return "redirect:/empleados/listar";
+			}
+			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+			
+			model.put("empleado", empleado.get());
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
-		model.put("empleado", empleado.get());
+		
 
 		return "empleado/vere";
 	}

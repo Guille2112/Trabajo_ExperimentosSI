@@ -11,6 +11,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,7 +32,7 @@ import pe.edu.upc.service.IListaService;
 import pe.edu.upc.service.IProveedorService;
 
 @Controller
-@SessionAttributes("listaCompra")
+@SessionAttributes("{listaCompra, usuario_rol, usuario_nombre}")
 @RequestMapping("/listaCompras")
 public class Lista_CompraController {
 
@@ -50,15 +52,29 @@ public class Lista_CompraController {
 	@Secured({ "ROLE_ADMIN" })
 	@GetMapping("/nuevo")
 	public String nuevaLista_Compra(Model model) {
-		model.addAttribute("lista_Compra", new Lista_Compra());
-		model.addAttribute("listaProveedores", pService.listar());
-		model.addAttribute("valorBoton", "Registrar");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			model.addAttribute("lista_Compra", new Lista_Compra());
+			model.addAttribute("listaProveedores", pService.listar());
+			model.addAttribute("valorBoton", "Registrar");
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
 		return "/listaCompra/listaCompra";
 	}
 
 	@PostMapping("/guardar")
 	public String guardarLista_Compra(@Valid Lista_Compra lista_Compra, BindingResult result, Model model,
 			SessionStatus status, RedirectAttributes redirAttrs) throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		if (result.hasErrors()) {
 			model.addAttribute("listaProveedores", pService.listar());
 			model.addAttribute("valorBoton", "Registrar");
@@ -90,7 +106,12 @@ public class Lista_CompraController {
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping("/listar")
 	public String listarLista_Compras(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			model.addAttribute("lista_Compra", new Lista_Compra());
 
 			List<Lista_Compra> list = lService.listar();
@@ -117,7 +138,12 @@ public class Lista_CompraController {
 	@Secured("ROLE_ADMIN")
 	@RequestMapping("/eliminar")
 	public String eliminar(Model model, @RequestParam(value = "id") Integer id) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			if (id != null && id > 0) {
 				lService.eliminar(id);
 				model.addAttribute("mensaje", "Se elimin\u00f3 correctamente la lista de compra");
@@ -157,8 +183,12 @@ public class Lista_CompraController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@RequestMapping("/buscarp")
-	public String buscarProveedor(Map<String, Object> model, @ModelAttribute Lista_Compra lista) throws ParseException {
-
+	public String buscarProveedor(Map<String, Object> model, @ModelAttribute Lista_Compra lista,Model modelo) throws ParseException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		List<Lista_Compra> listaListas;
 		lista.setNotaLista(lista.getNotaLista());
 		listaListas = lService.buscar(lista.getNotaLista());
@@ -179,8 +209,11 @@ public class Lista_CompraController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@RequestMapping("/buscarm")
-	public String buscarMayor(Map<String, Object> model, @ModelAttribute Lista_Compra lista) throws ParseException {
-
+	public String buscarMayor(Map<String, Object> model, @ModelAttribute Lista_Compra lista, Model modelo) throws ParseException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
 		List<Lista_Compra> listaListas = new ArrayList<>();
 		lista.setPrecioLista(lista.getPrecioLista());
 
@@ -211,7 +244,12 @@ public class Lista_CompraController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/detalle/{id}")
 	public String detailsLista(@PathVariable(value = "id") int id, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			model.addAttribute("usuario_nombre", authentication.getName().toString());
+		
 			Optional<Lista_Compra> detalle = lService.listarId(id);
 			if (!detalle.isPresent()) {
 				model.addAttribute("info", "Lista de Compra no existe");
@@ -232,8 +270,12 @@ public class Lista_CompraController {
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping(value = "/ver/{id}")
 	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash,
-			Model model2) {
-
+			Model model2,Model modelo) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		Optional<Lista_Compra> lista_Compra = lService.listarId(id);
 		if (lista_Compra == null) {
 			flash.addFlashAttribute("error", "La lista de compra no existe en la base de datos.");
