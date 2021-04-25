@@ -86,13 +86,12 @@
 				</button>
 				<div class="collapse navbar-collapse" id="ftco-nav">
 					<ul class="navbar-nav mr-auto">
-						<li class="nav-item"><a class="nav-link" href="#about"
-							th:href="@{bienvenido}">Bienvenido</a></li>
 						
-							<li class="nav-item"sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/empleados/listar}" class="nav-link" href="#about">Empleados</a></li>
-							<li class="nav-item"sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/recursos/listar}" class="nav-link" href="#about">Recursos</a></li>
+							<li class="nav-item"sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER')"><a th:href="@{/recursos/bienvenido}" class="nav-link" href="#about">Bienvenido</a></li>
+							<li class="nav-item" th:if="${usuario_rol} == '[ROLE_ADMIN]'" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/empleados/listar}" class="nav-link" href="#about">Empleados</a></li>
+							<li class="nav-item" th:if="${usuario_rol} == '[ROLE_ADMIN]'" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/recursos/listar}" class="nav-link" href="#about">Recursos</a></li>
 							<li class="nav-item"sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER')"><a th:href="@{/incidentes/listar}" class="nav-link" href="#about">Incidentes</a></li>
-							<li class="nav-item"sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/proveedores/listar}" class="nav-link" href="#about">Proveedores</a></li>
+							<li class="nav-item" th:if="${usuario_rol} == '[ROLE_ADMIN]'" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/proveedores/listar}" class="nav-link" href="#about">Proveedores</a></li>
 							<li class="nav-item"sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER')"><a th:href="@{/listaCompras/listar}" class="nav-link" href="#about">Lista de Compras</a></li>
 						
 					</ul>	

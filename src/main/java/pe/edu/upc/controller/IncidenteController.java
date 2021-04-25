@@ -8,6 +8,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -84,11 +86,13 @@ public class IncidenteController {
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping("/listar")
 	public String listarincidentes(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		try {
 			model.addAttribute("incidente", new Incidente());
 
 			List<Incidente> list = fService.listar();
 			model.addAttribute("listaIncidentes", list);
+			System.out.println("EL ROLE : "+authentication.getAuthorities());
 
 		} catch (Exception e) {
 			model.addAttribute("error", e.getMessage());

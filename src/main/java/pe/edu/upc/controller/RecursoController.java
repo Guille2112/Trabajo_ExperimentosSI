@@ -13,6 +13,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,9 +42,23 @@ public class RecursoController {
 
 	@Autowired
 	private IUploadFileService uploadFileService;
+	
+
+	
+	
+
+		
 
 	@GetMapping("/bienvenido")
 	public String bienvenido(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+			System.out.println("EL ROLLLLLLL : "+authentication.getAuthorities().toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
 		return "bienvenido";
 	}
 
