@@ -86,13 +86,13 @@ public class IncidenteController {
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping("/listar")
 	public String listarincidentes(Model model) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		try {
 			model.addAttribute("incidente", new Incidente());
 
 			List<Incidente> list = fService.listar();
 			model.addAttribute("listaIncidentes", list);
-			System.out.println("EL ROLE : "+authentication.getAuthorities());
+			
 
 		} catch (Exception e) {
 			model.addAttribute("error", e.getMessage());

@@ -54,7 +54,7 @@ public class RecursoController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		try {
 			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
-			System.out.println("EL ROLLLLLLL : "+authentication.getAuthorities().toString());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			
