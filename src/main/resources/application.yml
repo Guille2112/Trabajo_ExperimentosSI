@@ -4,7 +4,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     password: tigrillogato
-    url: jdbc:postgresql://localhost/saledb
+    url: jdbc:postgresql://localhost/TrabajoExperimentodb
     username: postgres
   jackson:
     serialization:

@@ -30,7 +30,7 @@ import pe.edu.upc.service.IListaService;
 import pe.edu.upc.service.IRecursoService;
 
 @Controller
-@SessionAttributes("{detalle, usuario_rol, usuario_nombre}")
+@SessionAttributes("detalle")
 @RequestMapping("/detalles")
 public class Detalle_List_CompraController {
 
@@ -50,18 +50,14 @@ public class Detalle_List_CompraController {
 	@GetMapping("/nuevo")
 	public String nuevoDetalle(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		try {
-			model.addAttribute("detalle", new Detalle_List_Compra());
-			model.addAttribute("listaCompras", lService.listar());
-			model.addAttribute("listaRecursos", rService.listar());
-			model.addAttribute("valorBoton", "Registrar");
-			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
-			model.addAttribute("usuario_nombre", authentication.getName().toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-		}
 		
+		model.addAttribute("detalle", new Detalle_List_Compra());
+		model.addAttribute("listaCompras", lService.listar());
+		model.addAttribute("listaRecursos", rService.listar());
+		model.addAttribute("valorBoton", "Registrar");
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		return "detalle/detalle";
 	}
 
@@ -70,20 +66,13 @@ public class Detalle_List_CompraController {
 	public String nuevoDetalleespecifico(@PathVariable(value = "id") Integer id, Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
-		try {
-			model.addAttribute("detalle", new Detalle_List_Compra());
-			model.addAttribute("listaCompras", lService.buscarespefico(id));
-			model.addAttribute("listaRecursos", rService.listar());
-			model.addAttribute("valorBoton", "Registrar");
-			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
-			model.addAttribute("usuario_nombre", authentication.getName().toString());
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-		}
-		
-		
+		model.addAttribute("detalle", new Detalle_List_Compra());
+		model.addAttribute("listaCompras", lService.buscarespefico(id));
+		model.addAttribute("listaRecursos", rService.listar());
+		model.addAttribute("valorBoton", "Registrar");
+		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		model.addAttribute("usuario_nombre", authentication.getName().toString());
+	
 		return "detalle/detalle";
 	}
 
@@ -92,10 +81,9 @@ public class Detalle_List_CompraController {
 	public String guardarDetalle(@Valid @ModelAttribute(value = "detalle") Detalle_List_Compra detalle_List_Compra,
 			BindingResult result, Model model, SessionStatus status, RedirectAttributes redirAttrs) throws Exception {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
 		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
 		model.addAttribute("usuario_nombre", authentication.getName().toString());
-		
+
 		if (result.hasErrors()) {
 			model.addAttribute("listaCompras", lService.listar());
 			model.addAttribute("listaRecursos", rService.listar());
@@ -133,11 +121,11 @@ public class Detalle_List_CompraController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		try {
-			model.addAttribute("detalle", new Detalle_List_Compra());
-			model.addAttribute("listaDetalles", dService.listar());
 			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
 			model.addAttribute("usuario_nombre", authentication.getName().toString());
-			
+
+			model.addAttribute("detalle", new Detalle_List_Compra());
+			model.addAttribute("listaDetalles", dService.listar());
 		} catch (Exception e) {
 			model.addAttribute("error", e.getMessage());
 		}
@@ -146,13 +134,14 @@ public class Detalle_List_CompraController {
 
 	@Secured("ROLE_ADMIN")
 	@RequestMapping("/eliminar")
-	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id,Model modelo) {
+	public String eliminar(Map<String, Object> model, @RequestParam(value = "id") Integer id, Model modelo) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 
 		try {
 			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
 			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
-			
+
 			if (id != null && id > 0) {
 				dService.eliminar(id);
 				model.put("mensaje", "Se ha eliminado el detalle de compra correctamente.");
@@ -173,7 +162,7 @@ public class Detalle_List_CompraController {
 		try {
 			model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
 			model.addAttribute("usuario_nombre", authentication.getName().toString());
-			
+
 			Optional<Detalle_List_Compra> detalle = dService.listarId(id);
 			if (!detalle.isPresent()) {
 				model.addAttribute("info", "Detalle no existe");
@@ -196,48 +185,37 @@ public class Detalle_List_CompraController {
 	@RequestMapping("/buscar")
 	public String buscar(Map<String, Object> model, @ModelAttribute Detalle_List_Compra detalle, Model modelo) throws ParseException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		try {
-			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
-			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
-			
-			List<Detalle_List_Compra> listaDetalles;
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
 
-			detalle.setRecursoDetalle(detalle.getRecursoDetalle());
-			listaDetalles = dService.FindRecursosByListaCompra(detalle.getListaDetalle().getIdLista());
+		List<Detalle_List_Compra> listaDetalles;
 
-			if (listaDetalles.isEmpty()) {
-				model.put("mensaje", "No se encontraron recursos con la cantidad de unidades especificado.");
-	
-			}
-			model.put("listaDetalles", listaDetalles);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
+		detalle.setRecursoDetalle(detalle.getRecursoDetalle());
+		listaDetalles = dService.FindRecursosByListaCompra(detalle.getListaDetalle().getIdLista());
+
+		if (listaDetalles.isEmpty()) {
+			model.put("mensaje", "No se encontraron recursos con la cantidad de unidades especificado.");
+
 		}
-		
+		model.put("listaDetalles", listaDetalles);
 		return "detalle/listaDetalle";
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	@GetMapping(value = "/ver/{id}")
-	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash ,Model modelo) {
+	public String ver(@PathVariable(value = "id") Integer id, Map<String, Object> model, RedirectAttributes flash, Model modelo) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
+		modelo.addAttribute("usuario_nombre", authentication.getName().toString());
+
+
 		Optional<Detalle_List_Compra> detalle = dService.listarId(id);
-		try {
-			modelo.addAttribute("usuario_rol", authentication.getAuthorities().toString());
-			modelo.addAttribute("usuario_nombre", authentication.getName().toString());
-			
-			if (detalle == null) {
-				flash.addFlashAttribute("error", "El detalle de lista de compra no existe en la base de datos.");
-				return "redirect:/detalles/listar";
-			}
-			model.put("detalle", detalle.get());
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
+		if (detalle == null) {
+			flash.addFlashAttribute("error", "El detalle de lista de compra no existe en la base de datos.");
+			return "redirect:/detalles/listar";
 		}
-		
+		model.put("detalle", detalle.get());
+
 		return "detalle/verd";
 	}
 
