@@ -28,7 +28,10 @@ public class UserSecurityController {
 	@PostMapping(value = { "/createAccount" })
 	public String createAccount(@RequestParam(value = "error", required = false) String error, Model model, Users user,
 			RedirectAttributes flash) {
-
+		if(user !=null)
+		{
+			model.addAttribute("success", "Se ha registrado correctamente");
+		}
 		Pair<Boolean, String> outData = securityService.createUser(user.getUsername(), user.getPassword(), user.getEmail(),
 																	user.getName(),user.getLastName(),"ROLE_USER");
 
@@ -37,7 +40,7 @@ public class UserSecurityController {
 			return "/usersecurity/createAccount";
 		}
 
-		return "/home";
+		return "/usersecurity/createAccount";
 	}
 
 }
