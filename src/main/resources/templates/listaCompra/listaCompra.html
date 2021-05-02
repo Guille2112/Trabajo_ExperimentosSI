@@ -8,7 +8,7 @@
 	<header th:replace="layout/layout :: header"></header>
 	<div class="container">
 		<div class="card bg-light">
-			<div class="card-header text-black bg-blue">Registro de nueva
+			<div class="card-header text-black bg-blue" th:if="${usuario_rol} == '[ROLE_ADMIN]'">Registro de nueva
 				Lista de compra</div>
 			<form th:action="@{/listaCompras/guardar}"
 				th:object="${lista_Compra}" method="post"
@@ -42,7 +42,6 @@
 						actual de la Lista de compra:</label>
 					<div class="col-sm-6">
 						<select class="form-control" th:field="*{estadoLista}">
-							<option value="Seleccionar" selected>Seleccionar</option>
 							<option th:value="Pendiente" th:text="Pendiente"></option>
 							<option th:value="Facturado" th:text="Facturado"></option>
 							<option th:value="Retrasado" th:text="Retrasado"></option>

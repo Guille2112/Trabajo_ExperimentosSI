@@ -9,7 +9,7 @@
 		<br>
 
 		<div class="container">
-			<div align="right">
+			<div align="right" th:if="${usuario_rol} == '[ROLE_ADMIN]'">
 				<a th:href="@{/listaCompras/nuevo}" id="add-row" type="button"
 					class="btn btn-primary">Nuevo Lista de compra</a>
 			</div>
