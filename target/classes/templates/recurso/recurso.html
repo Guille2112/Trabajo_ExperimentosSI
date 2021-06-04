@@ -37,7 +37,6 @@
 						<select class="form-control" th:field="*{tipoUnidadRecurso}">
 							<option th:value="Kilogramos" th:text="Kilogramos"></option>
 							<option th:value="Litros" th:text="Litros"></option>
-							<option th:value="Unidad" th:text="Unidad"></option>
 							<option th:value="Otro" th:text="Otro"></option>
 						</select> <small th:if="${#fields.hasErrors('tipoUnidadRecurso')}"
 							th:errors="*{tipoUnidadRecurso}"></small>
