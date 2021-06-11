@@ -187,11 +187,13 @@
 				<div class="col-md">
 					<div class="ftco-footer-widget mb-5">
 						<h2 class="ftco-heading-2">Conócenos</h2>
+						<p class="text-footer">Nuestro correo:
+						cai2021@gmail.com</p>
 						<form action="#" class="subscribe-form">
 							<div class="form-group">
-								<input type="text" class="form-control mb-2 text-center"
-									placeholder="Escribe tu consulta"> <input type="submit"
-									value="Enviar" class="form-control submit px-3">
+								<input id="tbx_consulta" type="text" class="form-control mb-2 text-center"
+									placeholder="Escribe tu consulta"> <a onclick="consulta()"><button id="consulta" class="form-control submit px-3">Enviar</button></a>
+									<p id="confirmacion" class="text-footer"></p>
 							</div>
 						</form>
 					</div>
@@ -231,7 +233,11 @@
 		async></script>
 	<script src="/js/google-map.js" async></script>
 	<script src="/js/main.js" async></script>
-
-
+	<script type="text/javascript">
+	function consulta(){
+		document.getElementById("tbx_consulta").value="";
+		document.getElementById("confirmacion").innerHTML="¡Gracias por tu consulta!";
+		}
+	</script>
 </body>
 </html>
