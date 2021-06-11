@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: TrabajoFinal_CAI
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: ledae
+Built-By: usuario
 Implementation-Vendor-Id: pe.edu.upc
-Build-Jdk: 1.8.0_281
+Build-Jdk: 1.8.0_261
 Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
  ot-starter-parent/TrabajoFinal_CAI
 Created-By: Maven Integration for Eclipse

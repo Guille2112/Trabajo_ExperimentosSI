@@ -32,6 +32,7 @@ public class LoginController {
 
 		if (logout != null) {
 			model.addAttribute("success", "Ha cerrado sesi\u00F3n con \u00E9xito!");
+			return "redirect:/";
 		}
 
 		return "login";
