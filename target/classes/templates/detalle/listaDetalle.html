@@ -42,7 +42,7 @@
 								<th>Recurso</th>
 								<th>Id Lista de Compra</th>
 								<th>Total Importe</th>
-								<th align="left">Operaciones</th>
+								<th align="left"th:if="${usuario_rol} == '[ROLE_ADMIN]'">Operaciones</th>
 							</tr>
 						</thead>
 						<tbody id="detalle-list">
@@ -57,7 +57,7 @@
 
 								<td th:text="${detalle.importe}"></td>
 
-								<td align="left"><a th:id="${detalle.idDetalle}"
+								<td align="left"th:if="${usuario_rol} == '[ROLE_ADMIN]'"><a th:id="${detalle.idDetalle}"
 									class="fas fa-trash-alt fa-2x button-default"
 									onclick="ondelete(this);"></a> | <a
 									th:href="@{'/detalles/detalle/' + ${detalle.idDetalle}}"

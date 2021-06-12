@@ -3,7 +3,7 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: postgres
+    password: tigrillogato
     url: jdbc:postgresql://localhost/TrabajoExperimentodb
     username: postgres
   jackson:

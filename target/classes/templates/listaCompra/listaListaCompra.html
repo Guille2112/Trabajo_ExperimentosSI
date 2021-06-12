@@ -58,8 +58,8 @@
 									<th>Proveedor</th>
 									<th>Precio</th>
 									<th>Estado</th>
-									<th align="left">Operaciones</th>
-									<th align="left">Operación</th>
+									<th align="left"th:if="${usuario_rol} == '[ROLE_ADMIN]'">Operaciones</th>
+									<th align="left"th:if="${usuario_rol} == '[ROLE_ADMIN]'">Operación</th>
 								</tr>
 							</thead>
 
@@ -76,13 +76,13 @@
 
 									<td th:text="${lista_Compra.estadoLista}"></td>
 
-									<td align="left"><a th:id="${lista_Compra.idLista}"
+									<td align="left"th:if="${usuario_rol} == '[ROLE_ADMIN]'"><a th:id="${lista_Compra.idLista}"
 										class="fas fa-trash-alt fa-2x button-default"
 										onclick="ondelete(this);"></a> | <a
 										th:href="@{'/listaCompras/detalle/' + ${lista_Compra.idLista}}"
 										class="fas fa-edit fa-2x button-default"></a></td>
 
-									<td><a class="fas fa-cart-plus fa-2x button-default"
+									<td th:if="${usuario_rol} == '[ROLE_ADMIN]'"><a class="fas fa-cart-plus fa-2x button-default"
 										th:href="@{/detalles/nuevodentro/} + ${lista_Compra.idLista}"></a></td>
 								</tr>
 							</tbody>

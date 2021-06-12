@@ -55,7 +55,7 @@
 									<th>Lista de compra</th>
 
 
-									<th align="center">Operaciones</th>
+									<th align="center"th:if="${usuario_rol} == '[ROLE_ADMIN]'">Operaciones</th>
 
 								</tr>
 							</thead>
@@ -68,7 +68,7 @@
 
 									<td th:text="${empleadoxLC.listaEmpleadoLC.idLista}"></td>
 
-									<td align="left"><a th:id="${empleadoxLC.idEmpleadoXLC}"
+									<td align="left"th:if="${usuario_rol} == '[ROLE_ADMIN]'"><a th:id="${empleadoxLC.idEmpleadoXLC}"
 										class="fas fa-trash-alt fa-2x button-default"
 										onclick="ondelete(this);"></a> | <a
 										th:href="@{'/empleadoxLCs/detalle/' + ${empleadoxLC.idEmpleadoXLC}}"
