@@ -66,6 +66,8 @@ public class Detalle_List_CompraController {
 	public String nuevoDetalleespecifico(@PathVariable(value = "id") Integer id, Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
+		
+		
 		model.addAttribute("detalle", new Detalle_List_Compra());
 		model.addAttribute("listaCompras", lService.buscarespefico(id));
 		model.addAttribute("listaRecursos", rService.listar());
@@ -84,15 +86,17 @@ public class Detalle_List_CompraController {
 		model.addAttribute("usuario_rol", authentication.getAuthorities().toString());
 		model.addAttribute("usuario_nombre", authentication.getName().toString());
 
-		if (result.hasErrors()) {
+		/*if (result.hasErrors()) {
 			model.addAttribute("listaCompras", lService.listar());
 			model.addAttribute("listaRecursos", rService.listar());
 			model.addAttribute("detalle", detalle_List_Compra);
 			model.addAttribute("valorBoton", "Registrar");
 			return "/detalle/detalle";
-		} else {
+		} else {*/
 			int rpta = -1;
 			Optional<Detalle_List_Compra> detalleEncontrado = dService.listarId(detalle_List_Compra.getIdDetalle());
+			//rService.buscarNombreRecursoCompleto(detalle_List_Compra.getRecursoDetalle().getNombreRecurso()).get(0).getNombreRecurso()
+			detalle_List_Compra.setPrecioDetalle(rService.listarId(detalle_List_Compra.getRecursoDetalle().getIdRecurso()).getPrecioRecurso());
 			if (!detalleEncontrado.isPresent()) {
 				rpta = dService.insertar(detalle_List_Compra);
 				redirAttrs.addFlashAttribute("mensaje", "Se registr\u00f3 correctamente");
@@ -109,7 +113,7 @@ public class Detalle_List_CompraController {
 				redirAttrs.addFlashAttribute("mensaje", "Se modific\u00f3 correctamente");
 			}
 
-		}
+		/*}*/
 		model.addAttribute("listaDetalles", dService.listar());
 
 		return "redirect:/detalles/listar";
