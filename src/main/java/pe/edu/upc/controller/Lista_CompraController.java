@@ -201,7 +201,20 @@ public class Lista_CompraController {
 		if (listaListas.isEmpty()) {
 			model.put("mensaje", "No se encontr\u00f3 ning\u00fan resultado");
 		}
+		List<Lista_Compra> list = lService.listar();
+		List<Detalle_List_Compra> detalleLista = serviceDetalle.listar();
+		
+		for (Lista_Compra l : list) {
+			float precioLista = 0;
 
+			for (Detalle_List_Compra e : detalleLista.stream()
+					.filter(c -> c.getListaDetalle().getIdLista() == l.getIdLista()).collect(Collectors.toList()))
+				precioLista += e.getPrecioDetalle() * e.getUnidadesDetalle();
+
+			l.setPrecioLista(precioLista);
+
+		}
+		modelo.addAttribute("listaLista_Compras", list);
 		model.put("listaLista_Compras", listaListas);
 		return "listaCompra/listaListaCompra";
 
