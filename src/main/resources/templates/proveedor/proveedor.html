@@ -44,7 +44,11 @@
 				<div class="form-group row">
 					<label for="rucProveedor" class="col-sm-2 col-form-label">RUC:</label>
 					<div class="col-sm-6">
-						<input type="text" th:field="*{rucProveedor}" class="form-control"
+						<input 
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							step="1" min="11111111111"
+                  			onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+   							type="number" th:field="*{rucProveedor}" class="form-control"
 							th:errorclass="'form-control alert-danger'" maxlength="11"/> <small
 							th:if="${#fields.hasErrors('rucProveedor')}"
 							th:errors="*{rucProveedor}"></small>
@@ -54,10 +58,10 @@
 
 				<div class="form-group row">
 					<label for="nombrecontactoProveedor"
-						class="col-sm-2 col-form-label">Nombre contacto del
-						proveedor:</label>
+						class="col-sm-2 col-form-label">Nombre contacto del proveedor:</label>
 					<div class="col-sm-6">
 						<input type="text" th:field="*{nombrecontactoProveedor}"
+							onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)"
 							class="form-control" th:errorclass="'form-control alert-info'" maxlength="70"/>
 						<small th:if="${#fields.hasErrors('nombrecontactoProveedor')}"
 							th:errors="*{nombrecontactoProveedor}"></small>
@@ -66,10 +70,12 @@
 
 				<div class="form-group row">
 					<label for="numerocontactoProveedor"
-						class="col-sm-2 col-form-label">Número de contacto del
-						proveedor:</label>
+						class="col-sm-2 col-form-label">Número de contacto del proveedor:</label>
 					<div class="col-sm-6">
-						<input type="text" th:field="*{numerocontactoProveedor}"
+						<input type="number" th:field="*{numerocontactoProveedor}"
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							step="1" min="911111111"
+                  			onkeypress="return event.charCode >= 48 && event.charCode <= 57"
 							class="form-control" th:errorclass="'form-control alert-info'" maxlength="9"/>
 						<small th:if="${#fields.hasErrors('numerocontactoProveedor')}"
 							th:errors="*{numerocontactoProveedor}"></small>
