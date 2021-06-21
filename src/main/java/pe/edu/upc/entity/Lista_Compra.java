@@ -39,7 +39,8 @@ public class Lista_Compra implements Serializable {
 	private String notaLista;
 
 	@ManyToOne
-	@JoinColumn(name = "idProveedor")
+	@NotNull(message = "Ingresa el proveedor a la lista de compra")
+	@JoinColumn(name = "idProveedor", nullable = false)
 	private Proveedor proveedorLista;
 
 	@NotEmpty(message = "Ingresa el estado de la lista de compra")

@@ -32,7 +32,8 @@ public class Incidente implements Serializable {
 	private int idIncidente;
 
 	@ManyToOne
-	@JoinColumn(name = "idLista")
+	@NotNull(message="Debe registrar al menos una lista de compra")
+	@JoinColumn(name = "idLista", nullable=false)
 	private Lista_Compra listaIncidente;
 
 	
