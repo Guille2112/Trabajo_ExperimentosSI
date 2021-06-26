@@ -26,6 +26,7 @@
 						del Empleado</label>
 					<div class="col-sm-6">
 						<input type="text" th:field="*{nombreEmpleado}"
+							onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)"
 							class="form-control" th:errorclass="'form-control alert-info'"
 							maxlength="30" /> <small
 							th:if="${#fields.hasErrors('nombreEmpleado')}"
@@ -38,6 +39,7 @@
 						del Empleado</label>
 					<div class="col-sm-6">
 						<input type="text" th:field="*{apellidoEmpleado}"
+							onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)"						
 							class="form-control" th:errorclass="'form-control alert-info'"
 							maxlength="30" /> <small
 							th:if="${#fields.hasErrors('apellidoEmpleado')}"
@@ -80,7 +82,10 @@
 					<label for="dniEmpleado" class="col-sm-2 col-form-label">DNI</label>
 					<div class="col-sm-6">
 						<input type="number" th:field="*{dniEmpleado}" class="form-control"
-							th:errorclass="'form-control alert-danger'" max="99999999" /> <small
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							step="1" min="11111111"
+                  			onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+							th:errorclass="'form-control alert-danger'" max="99999999" maxlength="8"/> <small
 							th:if="${#fields.hasErrors('dniEmpleado')}"
 							th:errors="*{dniEmpleado}"></small>
 					</div>
@@ -93,6 +98,7 @@
 						del Empleado</label>
 					<div class="col-sm-6">
 						<input type="text" th:field="*{tituloEmpleado}"
+							onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)"						
 							class="form-control" th:errorclass="'form-control alert-info'"
 							maxlength="30" /> <small
 							th:if="${#fields.hasErrors('tituloEmpleado')}"
@@ -118,6 +124,7 @@
 						del Empleado</label>
 					<div class="col-sm-6">
 						<input type="text" class="form-control"
+							onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)"						
 							th:field="*{puestoEmpleado}"
 							th:errorclass="'form-control alert-info'"> <small
 							th:if="${#fields.hasErrors('puestoEmpleado')}"
@@ -130,7 +137,10 @@
 						del Empleado</label>
 					<div class="col-sm-6">
 						<input type="number" th:field="*{celularEmpleado}"max="999999999"
-							class="form-control" th:errorclass="'form-control alert-info'" />
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							step="1" min="911111111"
+                  			onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+							class="form-control" th:errorclass="'form-control alert-info'" maxlength="9"/>
 						<small th:if="${#fields.hasErrors('celularEmpleado')}"
 							th:errors="*{celularEmpleado}"></small>
 					</div>
