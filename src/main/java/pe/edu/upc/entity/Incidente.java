@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Entity
 @Table(name = "incidente")
@@ -44,9 +45,9 @@ public class Incidente implements Serializable {
 
 	@NotNull(message = "La fecha es obligatoria")
 	@Past(message = "La fecha debe estar en el pasado")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name = "fechaIncidente")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(iso = ISO.DATE)
 	private Date fechaIncidente;
 	
 
