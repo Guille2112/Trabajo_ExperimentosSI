@@ -63,7 +63,7 @@
 					<label for="unidadesDetalle" class="col-sm-2 col-form-label">Cantidad
 						de Unidades</label>
 					<div class="col-sm-6">
-						<input type="text" th:field="*{unidadesDetalle}"
+						<input type="number" th:field="*{unidadesDetalle}"
 							class="form-control" th:errorclass="'form-control alert-info'"
 							maxlength="3" /> 
 							<small th:if="${#fields.hasErrors('unidadesDetalle')}"

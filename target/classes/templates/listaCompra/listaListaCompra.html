@@ -35,7 +35,7 @@
 					<form th:action="@{/listaCompras/buscarm}" method="post"
 						th:object="${lista_Compra}">
 						<div class="form-group">
-							<label for="mcompra">Buscar por mayor:</label> <input type="text"
+							<label for="mcompra">Buscar por mayor:</label> <input type="number"
 								class="form-control" th:field="*{precioLista}" id="mcompra"></input>
 							<div align="right">
 								<button type="submit" class="btn btn-info">Aceptar</button>
